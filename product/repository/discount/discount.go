@@ -26,6 +26,10 @@ type repository struct {
 	Client Client
 }
 
+type id string
+
+const requestIDKey id = "requestID"
+
 // New creates a new instance of Product repository to manipulate the database
 func New(client Client) Discount {
 	return &repository{client}
@@ -36,10 +40,11 @@ func (r *repository) Get(ctx context.Context, productID, userID string) (int64, 
 	if userID == "" {
 		return 0, nil
 	}
-
+	requestID, _ := ctx.Value(requestIDKey).(string)
 	req := &protobuf.DiscountRequest{
 		ProductID: productID,
 		UserID:    userID,
+		RequestID: requestID,
 	}
 	res, err := r.Client.Discount(ctx, req)
 	if err != nil {
