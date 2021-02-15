@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package protos;
+
+message DiscountRequest {
+    string productID = 1;
+    string userID = 2;
+}
+
+message DiscountResponse {
+    int64 percentage = 1;
+}
+
+service DiscountService {
+    // Unary
+    rpc Discount(DiscountRequest) returns (DiscountResponse) {};
+}
