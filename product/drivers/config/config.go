@@ -4,6 +4,7 @@ import "os"
 
 // Config contains the configuration fields used by the system
 type Config struct {
+	Port     string
 	LogLevel string
 	DB       *DB
 	GRPC     *GRPC
@@ -28,6 +29,7 @@ type GRPC struct {
 // Some package like viper might be applied to handle these cases better.
 func New() *Config {
 	return &Config{
+		Port:     os.Getenv("PORT"),
 		LogLevel: os.Getenv("LOG_LEVEL"),
 		DB: &DB{
 			User:     os.Getenv("DB_USER"),
