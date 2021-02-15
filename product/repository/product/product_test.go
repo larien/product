@@ -1,3 +1,49 @@
+package product_test
+
+import (
+	"log"
+	"testing"
+
+	"github.com/bxcodec/faker/v3"
+	"github.com/google/uuid"
+	"github.com/larien/product/product/drivers/database"
+	"github.com/larien/product/product/drivers/database/tests"
+	"github.com/larien/product/product/entity"
+	productRepository "github.com/larien/product/product/repository/product"
+	"github.com/stretchr/testify/require"
+	"github.com/stretchr/testify/suite"
+)
+
+func (suite *ProductTestSuite) TestGet_Success() {
+	s := productRepository.New(suite.DB.Connection)
+	product := &entity.Product{
+		ID:           faker.UUIDDigit(),
+		PriceInCents: faker.UnixTime(),
+		Title:        faker.Name(),
+		Description:  faker.Sentence(),
+	}
+	suite.is.Nil(s.Create(product))
+	obtainedProduct, err := s.Get(product.ID)
+	suite.is.NoError(err)
+	suite.is.Equal(product.PriceInCents, obtainedProduct.PriceInCents)
+	suite.is.Equal(product.Title, obtainedProduct.Title)
+	suite.is.Equal(product.Description, obtainedProduct.Description)
+}
+
+func (suite *ProductTestSuite) TestGet_Success_NotFound() {
+	s := productRepository.New(suite.DB.Connection)
+	product, err := s.Get(uuid.New().String())
+	suite.is.Nil(product)
+	suite.is.NoError(err)
+}
+
+func (suite *ProductTestSuite) TestGet_Failure() {
+	suite.is.Nil(suite.DB.Connection.Close())
+	s := productRepository.New(suite.DB.Connection)
+	product, err := s.Get(uuid.New().String())
+	suite.is.Nil(product)
+	suite.is.EqualError(err, database.ErrClosed.Error())
+}
 
 type ProductTestSuite struct {
 	suite.Suite
