@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/larien/product-service/product/drivers/config"
+	"github.com/larien/product/product/drivers/config"
 	_ "github.com/lib/pq" // postgres side effect
 )
 
