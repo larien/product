@@ -4,6 +4,7 @@ import "os"
 
 // Config contains the configuration fields used by the system
 type Config struct {
+	LogLevel string
 	DB       *DB
 	GRPC     *GRPC
 }
@@ -27,6 +28,7 @@ type GRPC struct {
 // Some package like viper might be applied to handle these cases better.
 func New() *Config {
 	return &Config{
+		LogLevel: os.Getenv("LOG_LEVEL"),
 		DB: &DB{
 			User:     os.Getenv("DB_USER"),
 			Password: os.Getenv("DB_PASSWORD"),
