@@ -1,0 +1,116 @@
+run:
+  concurrency: 4
+  timeout: 1m
+  issues-exit-code: 1
+  tests: true
+  modules-download-mode: mod
+  allow-parallel-runners: false
+
+output:
+  format: colored-line-number
+  print-issued-lines: true
+  print-linter-name: true
+  uniq-by-line: true
+  sort-results: false
+
+linters-settings:
+  errcheck:
+    check-type-assertions: false
+    check-blank: false
+  gocognit:
+    min-complexity: 10
+  goconst:
+    min-len: 3
+    min-occurrences: 3
+  gocritic:
+    enabled-checks:
+      - hugeParam
+      - truncateCmp
+      - elseif
+      - captLocal
+    settings:
+      captLocal: # must be valid enabled check name
+        paramsOnly: true
+      elseif:
+        skipBalanced: true
+      hugeParam:
+        sizeThreshold: 80
+      truncateCmp:
+        # whether to skip int/uint/uintptr types (default true)
+        skipArchDependent: true
+  gofmt:
+    # simplify code: gofmt with `-s` option, true by default
+    simplify: true
+  golint:
+    # minimal confidence for issues, default is 0.8
+    min-confidence: 0.8
+  govet:
+    # report about shadowed variables
+    check-shadowing: true
+    # settings per analyzer
+    settings:
+      printf: # analyzer name, run `go tool vet help` to see all analyzers
+        funcs: # run `go tool vet help printf` to see available settings for `printf` analyzer
+          - (github.com/golangci/golangci-lint/pkg/logutils.Log).Infof
+          - (github.com/golangci/golangci-lint/pkg/logutils.Log).Warnf
+          - (github.com/golangci/golangci-lint/pkg/logutils.Log).Errorf
+          - (github.com/golangci/golangci-lint/pkg/logutils.Log).Fatalf
+    enable:
+      - atomicalign
+    enable-all: false
+    disable:
+      - shadow
+    disable-all: false
+  lll:
+    # max line length, lines longer will be reported. Default is 120.
+    # '\t' is counted as 1 character by default, and can be changed with the tab-width option
+    line-length: 120
+    # tab width in spaces. Default to 1.
+    tab-width: 1
+  misspell:
+    # Correct spellings using locale preferences for US or UK.
+    # Default is to use a neutral variety of English.
+    # Setting locale to US will correct the British spelling of 'colour' to 'color'.
+    locale: US
+  unparam:
+    check-exported: false
+  unused:
+    check-exported: false
+  whitespace:
+    multi-if: false   # Enforces newlines (or comments) after every multi-line if statement
+    multi-func: false # Enforces newlines (or comments) after every multi-line function signature
+
+linters:
+  enable:
+    - megacheck
+    - govet
+    - errcheck
+    - gocognit
+    - goconst
+    - gocritic
+    - gofmt
+    - golint
+    - lll
+    - misspell
+    - unparam
+    - unused
+    - whitespace
+  disable:
+    - noctx
+  disable-all: false
+  presets:
+    - bugs
+    - unused
+  fast: false
+
+issues:
+  exclude-rules:
+    - linters:
+      # G404: Use of weak random number generator (math/rand instead of crypto/rand) - used in tests only
+      - gosec
+      text: "G404"
+    - linters:
+      # SA1012: do not pass a nil Context, even if a function permits it; pass context.TODO
+      # if you are unsure about which Context to use - used in tests only
+      - staticcheck
+      text: "SA1012"
