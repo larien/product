@@ -12,6 +12,8 @@ import (
 type Product interface {
 	// Get obtains a product by its ID from the database
 	Get(id string) (*entity.Product, error)
+	// List obtains every product from the database
+	List() ([]entity.Product, error)
 	// Create inserts a product into the database
 	Create(product *entity.Product) error
 }
@@ -41,6 +43,17 @@ func (r *repository) Get(id string) (*entity.Product, error) {
 	return &product, nil
 }
 
+func (r *repository) List() ([]entity.Product, error) {
+	var products []entity.Product
+	err := r.DB.Select(&products, `
+		SELECT id, price_in_cents, title, description, created_at, updated_at, deleted_at
+		FROM products
+		ORDER BY title`)
+	if err != nil {
+		return nil, err
+	}
+	return products, err
+}
 
 func (r *repository) Create(product *entity.Product) error {
 	_, err := r.DB.NamedExec(`

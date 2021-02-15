@@ -14,6 +14,63 @@ import (
 	"github.com/stretchr/testify/suite"
 )
 
+func (suite *ProductTestSuite) TestList_Success_Empty() {
+	s := productRepository.New(suite.DB.Connection)
+	products, err := s.List()
+	suite.is.NoError(err)
+	suite.is.Empty(products)
+}
+
+func (suite *ProductTestSuite) TestList_Success_One() {
+	s := productRepository.New(suite.DB.Connection)
+	product := &entity.Product{
+		ID:           faker.UUIDDigit(),
+		PriceInCents: faker.UnixTime(),
+		Title:        faker.Name(),
+		Description:  faker.Sentence(),
+	}
+	suite.is.Nil(s.Create(product))
+	products, err := s.List()
+	suite.is.NoError(err)
+	suite.is.Len(products, 1)
+}
+
+func (suite *ProductTestSuite) TestList_Success_Many() {
+	s := productRepository.New(suite.DB.Connection)
+	product := &entity.Product{
+		ID:           faker.UUIDDigit(),
+		PriceInCents: faker.UnixTime(),
+		Title:        faker.Name(),
+		Description:  faker.Sentence(),
+	}
+	suite.is.Nil(s.Create(product))
+	product = &entity.Product{
+		ID:           faker.UUIDDigit(),
+		PriceInCents: faker.UnixTime(),
+		Title:        faker.Name(),
+		Description:  faker.Sentence(),
+	}
+	suite.is.Nil(s.Create(product))
+	product = &entity.Product{
+		ID:           faker.UUIDDigit(),
+		PriceInCents: faker.UnixTime(),
+		Title:        faker.Name(),
+		Description:  faker.Sentence(),
+	}
+	suite.is.Nil(s.Create(product))
+	products, err := s.List()
+	suite.is.NoError(err)
+	suite.is.Len(products, 3)
+}
+
+func (suite *ProductTestSuite) TestList_Failure() {
+	suite.is.Nil(suite.DB.Connection.Close())
+	s := productRepository.New(suite.DB.Connection)
+	products, err := s.List()
+	suite.is.Nil(products)
+	suite.is.EqualError(err, database.ErrClosed.Error())
+}
+
 func (suite *ProductTestSuite) TestGet_Success() {
 	s := productRepository.New(suite.DB.Connection)
 	product := &entity.Product{
