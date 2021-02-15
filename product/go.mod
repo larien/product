@@ -9,4 +9,5 @@ require (
 	github.com/lib/pq v1.9.0
 	github.com/ory/dockertest/v3 v3.6.3
 	github.com/stretchr/testify v1.7.0
+	google.golang.org/grpc v1.35.0
 )
