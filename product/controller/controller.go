@@ -36,8 +36,10 @@ type (
 )
 
 type controller struct {
-	Product  Product
-	Discount Discount
+	Product   Product
+	Discount  Discount
+	WaitGroup *sync.WaitGroup
+	Channel   chan *entity.Product
 }
 
 // New creates a new instance of Product controller to make business logic decisions
@@ -61,25 +63,40 @@ func (c *controller) List(ctx context.Context, userID string) ([]*entity.Product
 		return nil, nil
 	}
 
-	var p []*entity.Product
+	c.WaitGroup = &sync.WaitGroup{}
+	c.Channel = make(chan *entity.Product)
+	go func() {
+		c.WaitGroup.Wait()
+		close(c.Channel)
+	}()
+
 	for _, product := range products {
-		c.applyDiscount(ctx, &product, userID)
-		p = append(p, &product)
+		c.WaitGroup.Add(1)
+		go c.applyDiscount(ctx, product, userID)
 	}
 
+	var p []*entity.Product
+	for product := range c.Channel {
+		p = append(p, product)
+	}
 
 	log.Debug(ctx, "products were obtained with success")
 	return p, nil
 }
 
-func (c *controller) applyDiscount(ctx context.Context, product *entity.Product, userID string) {
+func (c *controller) applyDiscount(ctx context.Context, product entity.Product, userID string) {
+	defer c.WaitGroup.Done()
+
 	log.Debug(ctx, "obtaining discount percentage")
 	percentage, err := c.Discount.Get(ctx, product.ID, userID)
 	if err != nil {
 		log.Error(ctx, err, "failed to apply discount")
+		c.Channel <- &product
 		return
 	}
 	log.Debugf(ctx, "discount percentage to be applied: %d", percentage)
 	product.Discount.Percentage = percentage
 	product.Discount.ValueInCents = (product.PriceInCents * percentage) / 100
+
+	c.Channel <- &product
 }
