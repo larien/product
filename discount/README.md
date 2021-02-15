@@ -20,7 +20,7 @@ Service 1: Individual product discount
 
 ## Usage
 
-Download the dependencies:
+To run it locally, download the dependencies:
 
 ```bash
 npm install
