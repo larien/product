@@ -16,7 +16,7 @@ import (
 )
 
 var (
-	errInvalidID = errors.New("invalid product ID")
+	errInvalidProductID = errors.New("invalid product ID")
 )
 
 type id string
@@ -73,7 +73,7 @@ func ProductID(next http.Handler) http.Handler {
 
 		productID := router.GetParamFromURL(r, "productID")
 		if !isValid(productID) {
-			request.Error(ctx, w, http.StatusBadRequest, pkgErrors.Wrap(errInvalidID, productID))
+			request.Error(ctx, w, http.StatusBadRequest, pkgErrors.Wrap(errInvalidProductID, productID))
 			return
 		}
 

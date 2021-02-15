@@ -55,7 +55,7 @@ func TestProductID(t *testing.T) {
 		s.ServeHTTP(rec, req)
 
 		is.Equal(http.StatusBadRequest, rec.Code)
-		is.Contains(rec.Body.String(), errInvalidID.Error())
+		is.Contains(rec.Body.String(), errInvalidProductID.Error())
 	})
 	t.Run("ID is valid", func(t *testing.T) {
 		t.Parallel()
