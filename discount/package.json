@@ -1,0 +1,21 @@
+{
+  "name": "discount",
+  "version": "1.0.0",
+  "description": "Discount service",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/larien/product"
+  },
+  "keywords": [
+    "nodejs",
+    "grpc",
+    "postgres"
+  ],
+  "author": "larien.dev",
+  "license": "MIT"
+}
