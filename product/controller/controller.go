@@ -86,14 +86,14 @@ func (c *controller) List(ctx context.Context, userID string) ([]*entity.Product
 func (c *controller) applyDiscount(ctx context.Context, product entity.Product, userID string) {
 	defer c.WaitGroup.Done()
 
-	log.Debug(ctx, "obtaining discount percentage")
+	log.Debugf(ctx, "obtaining discount percentage for product %s", product.ID)
 	percentage, err := c.Discount.Get(ctx, product.ID, userID)
 	if err != nil {
-		log.Error(ctx, err, "failed to apply discount")
+		log.Errorf(ctx, err, "failed to apply discount for product %s", product.ID)
 		c.Channel <- &product
 		return
 	}
-	log.Debugf(ctx, "discount percentage to be applied: %d", percentage)
+	log.Debugf(ctx, "discount percentage to be applied for product %s: %d", product.ID, percentage)
 	product.Discount.Percentage = percentage
 	product.Discount.ValueInCents = (product.PriceInCents * percentage) / 100
 

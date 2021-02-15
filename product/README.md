@@ -5,6 +5,7 @@ This service was designed in [Golang 1.15](https://golang.org/) and communicates
 ## Table of Contents
 
   - [Business Requirements](#business-requirements)
+  - [Folder Structure](#folder-structure)
   - [Usage](#usage)
   - [Endpoints](#endpoints)
     - [GET Products](#get-products)
@@ -26,6 +27,15 @@ Service 2: Products listing
 - To obtain a custom discount, this service must use service 1 (discount)
 - In case service 1 returns an error, the products list still needs to be returned, but with the errored product without discount
 - If discount service (1) is down, listing service (2) must keep working and returning the list, but it won't apply the discounts
+
+## Folder Structure
+
+- controller: contains the business logic inside the application and communicates only with product and discount repositories
+- drivers: utility packages that wrap external dependencies and other packages
+- entity: structures that defines the objects manipulated by the application, they are used by every layer
+- handler: the application entrypoint that defines the router and the endpoints to be acessed via HTTP
+- repository: contains the methods to access external dependencies, like discount service and database
+
 
 ## Usage
 
@@ -166,3 +176,15 @@ golangci-lint run
 ## Logging
 
 The log wrapper was written on top of [zerolog](github.com/rs/zerolog) and it's used only in the requests.
+
+The logging level is configure in `LOG_LEVEL` integer environment variable with the following values:
+
+- 0 - Debug
+- 1 - Info
+- 2 - Warn
+- 3 - Error
+- 4 - Fatal
+- 5 - Panic
+- 6 - No level
+- 7 - Disabled
+- 8 - Trace level

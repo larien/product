@@ -13,7 +13,7 @@ import (
 func Write(ctx context.Context, w http.ResponseWriter, statusCode int, data interface{}) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(statusCode)
-	log.Debugf(ctx, "status code: %d", statusCode)
+	log.Infof(ctx, "status code: %d", statusCode)
 	if err := json.NewEncoder(w).Encode(data); err != nil {
 		fmt.Fprintf(w, "%s", err.Error())
 	}

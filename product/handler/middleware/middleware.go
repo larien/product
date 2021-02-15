@@ -58,7 +58,7 @@ func Logger(next http.Handler) http.Handler {
 		t1 := time.Now()
 
 		defer func() {
-			log.Debugf(ctx, "%s %s%s %s", r.Method, r.Host, r.URL, time.Since(t1).String())
+			log.Infof(ctx, "%s %s%s %s", r.Method, r.Host, r.URL, time.Since(t1).String())
 		}()
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})

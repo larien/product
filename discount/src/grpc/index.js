@@ -20,15 +20,16 @@ let server = new grpc.Server();
 
 server.addService(discountProto.DiscountService.service, {
     discount: async (call, callback) => {
+        let requestID = call.request.requestID;
         let productID = call.request.productID;
         let userID = call.request.userID;
         try {
-            let result = await discount.getPercentage(productID, userID);
+            let result = await discount.getPercentage(requestID, productID, userID);
             callback(null, {
                 percentage: result,
             });
         } catch(err){
-            console.log("failed to get percentage" + err);
+            console.log("requestID: " + requestID + " |  failed to get percentage" + err);
         };
     },
 });

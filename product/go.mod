@@ -7,7 +7,7 @@ require (
 	github.com/go-chi/chi v1.5.2
 	github.com/google/uuid v1.2.0
 	github.com/jmoiron/sqlx v1.3.1
-	github.com/larien/product/protos v0.0.0-20210215192841-8614011483c5
+	github.com/larien/product/protos v0.0.0-20210215210121-559e7aad0569
 	github.com/lib/pq v1.9.0
 	github.com/ory/dockertest/v3 v3.6.3
 	github.com/pkg/errors v0.9.1

@@ -12,7 +12,8 @@ const MAX_PERCENTAGE = 10
 // unecessary process.
 
 module.exports = class Percentage {
-    constructor(){
+    constructor(requestID){
+      this.requestID = requestID
       this.value = 0;
     }
     isMax() {
@@ -24,7 +25,7 @@ module.exports = class Percentage {
         let today = new Date()
         let isBF = today.getDay() == 25 && today.getMonth() == 11
         if (isBF) {
-            console.log("blackfriday discount applied")
+            console.log("requestID: " + this.requestID + " | blackfriday discount applied")
             this.value += 10
         }
         this.isMax()
@@ -35,7 +36,7 @@ module.exports = class Percentage {
         let date = new Date(dateOfBirth)
         let isBirthday = (date.getDay() == today.getDay() && date.getMonth() == today.getMonth())
         if (isBirthday){
-            console.log("user birthday discount applied")
+            console.log("requestID: " + this.requestID + " | user birthday discount applied")
             this.value += 5
         }
         this.isMax()

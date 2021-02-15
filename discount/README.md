@@ -18,6 +18,13 @@ Service 1: Individual product discount
   - If it's blackfriday (25/11 for this test), the product will have a discount of 10%
   - The discount can't exceed 10%
 
+## Folder structure
+
+- app: contains the application entrypoint
+- database: methods to access the database
+- discount: business logic implementation and discount application
+- grpc: wrapper for grpc communication
+
 ## Usage
 
 To run it locally, download the dependencies:
