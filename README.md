@@ -1,6 +1,6 @@
 # Product Service
 
-Product Service is a small implementation of services communication via gRPC and HTTP requests. Some technologies used here are Golang, Node.JS, gRPC, PostgreSQL, Docker and Docker Compose and many others.
+Product Service is a implementation of services communication via gRPC and HTTP requests. Some technologies used here are Golang, Node.JS, gRPC, PostgreSQL, Docker and Docker Compose and many others.
 
 These services were designed according to [Hash's hiring test](https://github.com/hashlab/hiring). To understand each service and its technical decisions, please access each service's README:
 - [Product](product/README.md)
