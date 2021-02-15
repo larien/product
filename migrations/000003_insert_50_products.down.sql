@@ -1,0 +1,1 @@
+DELETE FROM products WHERE id NOT IN (SELECT TOP 50 id FROM products)
