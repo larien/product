@@ -1,0 +1,70 @@
+version: '3'
+
+services:
+  product:
+    container_name: product
+    build: ./product
+    restart: on-failure:5 # to wait for database
+    environment: 
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_PORT=${DB_PORT}
+      - DB_NAME=${DB_NAME}
+      - DB_HOST=database
+      - PORT=${PORT}
+      - LOG_LEVEL=${LOG_LEVEL}
+      - GRPC_HOST=discount
+      - GRPC_PORT=${GRPC_PORT}
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database
+    networks:
+      - connection
+
+  discount:
+    container_name: discount
+    build: ./discount
+    restart: on-failure:5 # to wait for database
+    environment: 
+      - POSTGRESQL_URL=${POSTGRESQL_URL}
+      - GRPC_HOST=${GRPC_HOST}
+      - GRPC_PORT=${GRPC_PORT}
+    ports:
+      - "50051:50051"
+    depends_on:
+      - database
+    networks:
+      - connection
+
+  migrate:
+    image: migrate/migrate
+    restart: on-failure:5 # to wait for database
+    depends_on:
+      - database
+    networks:
+      - connection
+    volumes:
+        - ./migrations:/migrations
+    command: ["-path", "/migrations", "-database",  "postgres://larien:lauren123@database:5432/product?sslmode=disable", "up"]
+
+
+  database:
+    image: postgres
+    networks:
+      - connection
+    container_name: database
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    ports:
+      - "5433:5432"
+    volumes:
+      - data:/var/lib/postgresql/data
+
+volumes:
+  data:
+
+networks:
+  connection:

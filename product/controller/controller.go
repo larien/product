@@ -50,7 +50,6 @@ func New(product Product, discount Discount) Controller {
 	}
 }
 
-// TODO - if userID is not sent, should we even try to obtain the discount?
 func (c *controller) List(ctx context.Context, userID string) ([]*entity.Product, error) {
 	log.Debug(ctx, "listing products")
 	products, err := c.Product.List()

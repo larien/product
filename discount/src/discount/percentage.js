@@ -15,10 +15,8 @@ module.exports = class Percentage {
     constructor(){
       this.value = 0;
     }
-    value = 0;
     isMax() {
       if (this.value > MAX_PERCENTAGE) {
-        console.log("é maior")
         this.value = MAX_PERCENTAGE;
       }
     }
