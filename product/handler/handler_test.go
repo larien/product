@@ -95,3 +95,18 @@ func TestListProduct(t *testing.T) {
 		})
 	})
 }
+
+func TestHealthcheck(t *testing.T) {
+	t.Parallel()
+	t.Run("service is up", func(t *testing.T) {
+		t.Parallel()
+		is := require.New(t)
+		req, err := http.NewRequest(http.MethodGet, "/status", nil)
+		is.Nil(err)
+		rec := httptest.NewRecorder()
+
+		handler := handler.New(nil)
+		handler.ServeHTTP(rec, req)
+		is.Equal(http.StatusOK, rec.Code)
+	})
+}

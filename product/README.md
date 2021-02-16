@@ -67,8 +67,10 @@ go run main.go
 
 Obtains a list of products with each discount if applicable.
 
-**GET /product**
+**GET /v1/product**
+
 _Optional_:
+
 - Header:
   - X-USER-ID: user ID as UUID V4
 
@@ -123,6 +125,17 @@ null
 }
 ```
 
+**GET /status**
+
+Service healthcheck
+
+Possible answers:
+
+- **200** Success
+```json
+null
+```
+
 ## Questions
 
 - Why do we need to send the user ID for every product if the user ID is always the same? The system performance would probably be way better if the discount was obtained once by service 1 and then applied to the products in service 2.
@@ -143,6 +156,11 @@ The tests implement the following packages:
 - [testify](https://github.com/stretchr/testify): provides assertion methods for cleaner outputs
 - [mockery](https://github.com/vektra/mockery): generates mocks from existing data structures to be used by unit tests
 
+To run unit tests only:
+```
+go test ./... -v -short
+```
+
 ### Integration Testing
 
 The tests implement the following packages:
@@ -152,9 +170,9 @@ The tests implement the following packages:
 
 Every testsuite creates its own container and their tests are executed there. Each test runs its test in a clean environment because the related table is created before each test and it's dropped after each test so that tests are isolated. The connection is also verified before and after each test.
 
-To run unit tests only:
+To run all tests:
 ```
-go test ./... -v -short
+go test ./... -v -p 1 -cover
 ```
 
 ### Mocking

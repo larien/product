@@ -1,6 +1,7 @@
 package discount_test
 
 import (
+	"context"
 	"errors"
 	"testing"
 
@@ -32,12 +33,13 @@ func TestGet(t *testing.T) {
 		req := &protobuf.DiscountRequest{
 			ProductID: faker.UUIDDigit(),
 			UserID:    faker.UUIDDigit(),
+			RequestID: "",
 		}
 		expectedError := errors.New(faker.Sentence())
-		s.On("Discount", nil, req).Return(nil, expectedError).Once()
+		s.On("Discount", context.Background(), req).Return(nil, expectedError).Once()
 
 		d := discount.New(s)
-		percentage, err := d.Get(nil, req.ProductID, req.UserID)
+		percentage, err := d.Get(context.Background(), req.ProductID, req.UserID)
 
 		s.AssertExpectations(t)
 		is.Equal(percentage, int64(0))
@@ -52,14 +54,15 @@ func TestGet(t *testing.T) {
 		req := &protobuf.DiscountRequest{
 			ProductID: faker.UUIDDigit(),
 			UserID:    faker.UUIDDigit(),
+			RequestID: "",
 		}
 		res := &protobuf.DiscountResponse{
 			Percentage: 10,
 		}
-		s.On("Discount", nil, req).Return(res, nil).Once()
+		s.On("Discount", context.Background(), req).Return(res, nil).Once()
 
 		d := discount.New(s)
-		percentage, err := d.Get(nil, req.ProductID, req.UserID)
+		percentage, err := d.Get(context.Background(), req.ProductID, req.UserID)
 
 		s.AssertExpectations(t)
 		is.Equal(percentage, res.Percentage)
